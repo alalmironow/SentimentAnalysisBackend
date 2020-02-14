@@ -1,28 +1,26 @@
 package ru.mironow.sentiment_analysis.web
 
-import com.fasterxml.jackson.annotation.JsonProperty
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RestController
+import ru.mironow.sentiment_analysis.AnalysisClaimUseCase
 import ru.mironow.sentiment_analysis.web.request.CreateClaimRequest
-import ru.mironow.sentiment_analysis.web.response.ResultClaimRest
+import ru.mironow.sentiment_analysis.web.response.AnalysisClaimRest
+import ru.mironow.sentiment_analysis.web.response.Response
 
 /**
- * Контроллер для работы с сервисом
+ * Controller for work with service
  *
  * Created By Alex Mironow - 13.02.2020
  */
 @RestController
-class ApiController {
-    data class Response(
-            @JsonProperty("error_code") val errorCode: Long = 0,
-            @JsonProperty("error_message") val errorMessage: String = "",
-            val `object`: Any
-    )
-
+class ApiController(val analysisClaimUseCase: AnalysisClaimUseCase) {
     /**
      * Запрос на анализ мнений пользователей по запросу [request]
      */
     @PostMapping("/create-analysis-claim")
-    fun createAnalysisClaim(@RequestBody request: CreateClaimRequest) = Response(`object` = ResultClaimRest(123L))
+    fun createAnalysisClaim(@RequestBody request: CreateClaimRequest): Response {
+        val claim = analysisClaimUseCase.createAnalysisClaim(request.q)
+        return Response( `object` = AnalysisClaimRest(claim) )
+    }
 }

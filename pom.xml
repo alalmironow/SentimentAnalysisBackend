@@ -17,5 +17,7 @@
         <module>Web</module>
         <module>Business</module>
         <module>Entities</module>
+        <module>DataAccessInterface</module>
+        <module>MongoDB</module>
     </modules>
 </project>

@@ -4,8 +4,10 @@ import org.springframework.boot.SpringApplication
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.builder.SpringApplicationBuilder
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer
+import org.springframework.context.annotation.ComponentScan
 
 @SpringBootApplication
+@ComponentScan("ru.mironow.sentiment_analysis")
 open class WebApplication : SpringBootServletInitializer() {
     override fun configure(builder: SpringApplicationBuilder?): SpringApplicationBuilder {
         return builder!!.sources(WebApplication::class.java)

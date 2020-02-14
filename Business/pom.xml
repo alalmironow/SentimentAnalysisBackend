@@ -33,6 +33,12 @@
             <version>${springBootVersion}</version>
             <scope>compile</scope>
         </dependency>
+
+        <dependency>
+            <groupId>ru.mironow</groupId>
+            <artifactId>DataAccessInterface</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
     </dependencies>
 
     <build>

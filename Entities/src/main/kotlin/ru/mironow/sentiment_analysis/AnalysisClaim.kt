@@ -1,11 +1,15 @@
 package ru.mironow.sentiment_analysis
 
 /**
- * Заявка на анализ мнений
+ * Claim for analysis user's opinions
  *
  * Created By Alexander Mironow - 13.02.2020
  */
-class AnalysisClaim(
+data class AnalysisClaim(
+        val id: String,
         val q: String,
-        val uniqueKey: String
+        val stage: AnalysisClaimStage = AnalysisClaimStage.PENDING,
+        val error: String? = null,
+        val percent: Int = 0,
+        val sentimentNegative: Boolean? = null
 )
