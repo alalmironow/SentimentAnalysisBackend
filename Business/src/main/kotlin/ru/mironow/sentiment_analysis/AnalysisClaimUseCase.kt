@@ -2,6 +2,7 @@ package ru.mironow.sentiment_analysis
 
 import org.springframework.stereotype.Component
 import ru.mironow.sentiment_analysis.data_service.AnalysisClaimService
+import ru.mironow.sentiment_analysis.data_service.SocialNetworkService
 import java.lang.RuntimeException
 import java.security.MessageDigest
 import java.util.*
@@ -13,7 +14,10 @@ import javax.xml.bind.DatatypeConverter
  * Created By Alexander Mironow - 13.02.2020
  */
 @Component
-class AnalysisClaimUseCase(val analysisClaimService: AnalysisClaimService) {
+class AnalysisClaimUseCase(
+        val analysisClaimService: AnalysisClaimService,
+        val socialNetworkService: SocialNetworkService
+) {
     /**
      * Создать заявку на анализ мнений по запросу [q]
      */

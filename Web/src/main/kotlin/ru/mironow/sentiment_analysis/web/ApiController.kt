@@ -1,5 +1,6 @@
 package ru.mironow.sentiment_analysis.web
 
+import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RestController
@@ -22,5 +23,10 @@ class ApiController(val analysisClaimUseCase: AnalysisClaimUseCase) {
     fun createAnalysisClaim(@RequestBody request: CreateClaimRequest): Response {
         val claim = analysisClaimUseCase.createAnalysisClaim(request.q)
         return Response( `object` = AnalysisClaimRest(claim) )
+    }
+
+    @GetMapping("/test")
+    fun test() {
+        analysisClaimUseCase.createAnalysisClaim("коронавирус")
     }
 }

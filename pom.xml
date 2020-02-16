@@ -19,5 +19,6 @@
         <module>Entities</module>
         <module>DataAccessInterface</module>
         <module>MongoDB</module>
+        <module>SocialNetworkService</module>
     </modules>
 </project>
