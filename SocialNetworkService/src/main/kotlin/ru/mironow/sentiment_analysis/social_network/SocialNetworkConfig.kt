@@ -4,5 +4,5 @@ import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.PropertySource
 
 @Configuration
-@PropertySource(value = ["social.properties"])
+@PropertySource(value = ["classpath:application-social.properties"])
 open class SocialNetworkConfig

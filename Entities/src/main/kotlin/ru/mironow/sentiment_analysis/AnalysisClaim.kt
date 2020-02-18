@@ -10,6 +10,5 @@ data class AnalysisClaim(
         val q: String,
         val stage: AnalysisClaimStage = AnalysisClaimStage.PENDING,
         val error: String? = null,
-        val percent: Int = 0,
-        val sentimentNegative: Boolean? = null
+        val percent: Int = 0
 )

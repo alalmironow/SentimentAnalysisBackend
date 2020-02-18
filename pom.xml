@@ -20,5 +20,6 @@
         <module>DataAccessInterface</module>
         <module>MongoDB</module>
         <module>SocialNetworkService</module>
+        <module>SentimentAnalysisService</module>
     </modules>
 </project>

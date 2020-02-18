@@ -13,17 +13,16 @@ import ru.mironow.sentiment_analysis.data_service.AnalysisClaimService
 @Service
 class AnalysisClaimServiceImpl(val database: DB): AnalysisClaimService {
     override fun save(claim: AnalysisClaim) {
-        val dbObject = toDBObject(claim)
+        val dbObject = claim.toDBObject()
         database.getCollection(COLLECTION_NAME).insert(dbObject)
     }
 
     companion object {
         const val COLLECTION_NAME = "analysis_claim"
 
-        fun toDBObject(claim: AnalysisClaim) = BasicDBObject("_id", claim.id)
-                .append("q", claim.q)
-                .append("stage", claim.stage.name)
-                .append("error", claim.error)
-                .append("sentiment_negative", claim.sentimentNegative)
+        private fun AnalysisClaim.toDBObject() = BasicDBObject("_id", this.id)
+                .append("q", this.q)
+                .append("stage", this.stage.name)
+                .append("error", this.error)
     }
 }

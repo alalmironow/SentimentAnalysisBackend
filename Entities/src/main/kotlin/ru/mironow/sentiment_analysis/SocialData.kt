@@ -1,7 +1,5 @@
 package ru.mironow.sentiment_analysis
 
-import java.time.LocalDateTime
-
 /**
  * Data from social networks
  * (posts, comments, messages, tweets)
@@ -9,8 +7,7 @@ import java.time.LocalDateTime
 data class SocialData(
         val data: String,
         val source: SocialDataSource,
-        val type: SocialDataType,
-        val date: LocalDateTime
+        val type: SocialDataType
 )
 
 enum class SocialDataSource(vararg types: SocialDataType) {

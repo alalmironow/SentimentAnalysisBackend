@@ -39,6 +39,12 @@
             <artifactId>DataAccessInterface</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
+
+        <dependency>
+            <groupId>ru.mironow</groupId>
+            <artifactId>SentimentAnalysisService</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
     </dependencies>
 
     <build>
