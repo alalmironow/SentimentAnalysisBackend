@@ -1,5 +1,6 @@
 package ru.mironow.sentiment_analysis.web
 
+import org.slf4j.LoggerFactory
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.RestControllerAdvice
 import ru.mironow.sentiment_analysis.web.response.Response
@@ -11,13 +12,17 @@ import ru.mironow.sentiment_analysis.web.response.Response
  */
 @RestControllerAdvice
 open class GlobalExceptionHandler {
+    private val log = LoggerFactory.getLogger(GlobalExceptionHandler.javaClass)
 
     @ExceptionHandler(RuntimeException::class)
-    fun runtimeException(exception: RuntimeException): Response = Response(
-            errorCode = 1,
-            errorMessage = exception.message ?: DEFAULT_ERROR,
-            `object` = null
-    )
+    fun runtimeException(exception: RuntimeException): Response {
+        log.error("Ошибка!", exception)
+        return Response(
+                errorCode = 1,
+                errorMessage = exception.message ?: DEFAULT_ERROR,
+                `object` = null
+        )
+    }
 
     companion object {
         private const val DEFAULT_ERROR = "Неизвестная ошибка"

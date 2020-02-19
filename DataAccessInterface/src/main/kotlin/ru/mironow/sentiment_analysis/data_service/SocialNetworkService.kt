@@ -1,7 +1,6 @@
 package ru.mironow.sentiment_analysis.data_service
 
-import ru.mironow.sentiment_analysis.MonthSocialData
-import ru.mironow.sentiment_analysis.SocialData
+import ru.mironow.sentiment_analysis.DateSocialData
 
 /**
  *  Interface for social network service
@@ -9,14 +8,7 @@ import ru.mironow.sentiment_analysis.SocialData
  */
 interface SocialNetworkService {
     /**
-     * Get relevant data from social network
-     * by [q]
+     * Get data from social network by [q]
      */
-    fun getRelevantData(q: String): List<SocialData>
-
-    /**
-     * Get year data from social network
-     * by [q]
-     */
-    fun getYearData(q: String): List<MonthSocialData>
+    fun getData(q: String): List<DateSocialData>
 }

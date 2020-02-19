@@ -4,7 +4,7 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RestController
-import ru.mironow.sentiment_analysis.AnalysisClaimUseCase
+import ru.mironow.sentiment_analysis.business.analysys_claim.AnalysisClaimUseCase
 import ru.mironow.sentiment_analysis.web.request.CreateClaimRequest
 import ru.mironow.sentiment_analysis.web.response.AnalysisClaimRest
 import ru.mironow.sentiment_analysis.web.response.Response

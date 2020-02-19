@@ -1,7 +1,8 @@
-package ru.mironow.sentiment_analysis
+package ru.mironow.sentiment_analysis.business.analysys_claim
 
 import org.springframework.scheduling.annotation.Async
 import org.springframework.stereotype.Component
+import ru.mironow.sentiment_analysis.*
 import ru.mironow.sentiment_analysis.data_service.AnalysisClaimService
 import ru.mironow.sentiment_analysis.data_service.SentimentTextService
 import ru.mironow.sentiment_analysis.data_service.SocialNetworkService
@@ -16,16 +17,16 @@ import javax.xml.bind.DatatypeConverter
  * Created By Alexander Mironow - 13.02.2020
  */
 @Component
-open class AnalysisClaimUseCase(
+open class AnalysisClaimUseCaseImpl(
         val analysisClaimService: AnalysisClaimService,
         val socialNetworkService: SocialNetworkService,
         val sentimentAnalysisService: SentimentAnalysisService,
         val sentimentTextService: SentimentTextService
-) {
+) : AnalysisClaimUseCase {
     /**
      * Создать заявку на анализ мнений по запросу [q]
      */
-    fun createAnalysisClaim(q: String): AnalysisClaim {
+    override fun createAnalysisClaim(q: String): AnalysisClaim {
         if (q.isBlank() || q.trim().length < MIN_LENGTH_QUERY) {
             throw RuntimeException("Минимальная длина поискового запроса $MIN_LENGTH_QUERY")
         }
@@ -40,30 +41,22 @@ open class AnalysisClaimUseCase(
         return claim
     }
 
-    open fun executeAnalysis(claim: AnalysisClaim) {
+    @Async
+    override fun executeAnalysis(claim: AnalysisClaim) {
         var processClaim = claim.copy(stage = AnalysisClaimStage.LOAD_DATA)
         //analysisClaimService.save(processClaim)
 
-        val relevantData = socialNetworkService.getRelevantData(claim.q)
-        val yearData = socialNetworkService.getYearData(claim.q)
+        val data = socialNetworkService.getData(claim.q)
 
         processClaim = processClaim.copy(stage = AnalysisClaimStage.EXECUTE)
         //analysisClaimService.save(processClaim)
 
-        val count = relevantData.size + yearData.stream().map { it.data.size }.reduce(0) {i1, i2 -> i1 + i2}
+        val count = data.size
         var counter = 0
 
         val listStatistic = mutableListOf<StatisticDay>()
-        listStatistic.add( getDayStatistic(relevantData) {
-            counter += relevantData.size
-            val percent = counter/count
-            if (percent > processClaim.percent + 1) {
-                processClaim = processClaim.copy(percent = counter / count)
-                //analysisClaimService.save(processClaim)
-            }
-        })
 
-        yearData.forEach {
+        data.forEach {
             listStatistic.add( getDayStatistic(it.data) {
                 counter += it.data.size
                 val percent = counter/count
