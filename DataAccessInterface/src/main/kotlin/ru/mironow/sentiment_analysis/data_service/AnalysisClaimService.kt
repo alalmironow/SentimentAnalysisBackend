@@ -12,4 +12,14 @@ interface AnalysisClaimService {
      * Save analysis claim [claim]
      */
     fun save(claim: AnalysisClaim)
+
+    /**
+     * Update analysis claim [claim]
+     */
+    fun update(claim: AnalysisClaim)
+
+    /**
+     * Get analysis claim by [id]
+     */
+    fun getById(id: String): AnalysisClaim
 }

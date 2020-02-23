@@ -4,10 +4,12 @@ import org.springframework.scheduling.annotation.Async
 import org.springframework.stereotype.Component
 import ru.mironow.sentiment_analysis.*
 import ru.mironow.sentiment_analysis.data_service.AnalysisClaimService
+import ru.mironow.sentiment_analysis.data_service.AnalysisResultService
 import ru.mironow.sentiment_analysis.data_service.SentimentTextService
 import ru.mironow.sentiment_analysis.data_service.SocialNetworkService
 import ru.mironow.sentiment_analysis.sentiment_analysis_service.SentimentAnalysisService
 import java.security.MessageDigest
+import java.time.LocalDate
 import java.util.*
 import javax.xml.bind.DatatypeConverter
 
@@ -21,7 +23,8 @@ open class AnalysisClaimUseCaseImpl(
         val analysisClaimService: AnalysisClaimService,
         val socialNetworkService: SocialNetworkService,
         val sentimentAnalysisService: SentimentAnalysisService,
-        val sentimentTextService: SentimentTextService
+        val sentimentTextService: SentimentTextService,
+        val analysisResultService: AnalysisResultService
 ) : AnalysisClaimUseCase {
     /**
      * Создать заявку на анализ мнений по запросу [q]
@@ -44,33 +47,51 @@ open class AnalysisClaimUseCaseImpl(
     @Async
     override fun executeAnalysis(claim: AnalysisClaim) {
         var processClaim = claim.copy(stage = AnalysisClaimStage.LOAD_DATA)
-        //analysisClaimService.save(processClaim)
+        analysisClaimService.update(processClaim)
 
         val data = socialNetworkService.getData(claim.q)
 
         processClaim = processClaim.copy(stage = AnalysisClaimStage.EXECUTE)
-        //analysisClaimService.save(processClaim)
+        analysisClaimService.update(processClaim)
 
-        val count = data.size
+        val count = data.map { it.data.size }.reduce {i1, i2 -> i1 + i2}
         var counter = 0
 
         val listStatistic = mutableListOf<StatisticDay>()
 
         data.forEach {
-            listStatistic.add( getDayStatistic(it.data) {
+            listStatistic.add( getDayStatistic(it.date, it.data) {
                 counter += it.data.size
-                val percent = counter/count
+                val percent = ((counter.toDouble()/count) * 100).toInt()
                 if (percent > processClaim.percent + 1) {
-                    processClaim = processClaim.copy(percent = counter / count)
-                    //analysisClaimService.save(processClaim)
+                    processClaim = processClaim.copy(percent = percent)
+                    analysisClaimService.update(processClaim)
                 }
             })
         }
 
-        println("test")
+        val result = AnalysisResult(
+                claimId = claim.id,
+                statistics = listStatistic
+        )
+
+        analysisResultService.save(result)
+
+        processClaim = processClaim.copy(stage = AnalysisClaimStage.FINISH)
+        analysisClaimService.update(processClaim)
     }
 
-    private fun getDayStatistic(data: List<SocialData>, observer: () -> Unit): StatisticDay {
+    override fun analysisProcess(id: String): AnalysisProcess {
+        val claim = analysisClaimService.getById(id)
+        return AnalysisProcess(
+                stage = claim.stage,
+                percent = claim.percent
+        )
+    }
+
+    override fun analysisResult(claimId: String) = analysisResultService.getByClaimId(claimId)
+
+    private fun getDayStatistic(date: LocalDate, data: List<SocialData>, observer: () -> Unit): StatisticDay {
         val count = data.size
         var countPosts = 0
         var countComments = 0
@@ -91,11 +112,12 @@ open class AnalysisClaimUseCaseImpl(
             } else {
                 countNegative += 1
             }
-
-            observer.invoke()
         }
 
+        observer.invoke()
+l
         return StatisticDay(
+                date = date,
                 countPositive = countPositive,
                 countNegative = countNegative,
                 count = count,

@@ -30,7 +30,7 @@ class VKService: SocialNetworkService {
 
         val now = LocalDateTime.now()
         var time = now
-        val lastTime = time.minusMonths(1)
+        val lastTime = time.minusMonths(12)
         val data = mutableListOf<DateSocialData>()
 
         while (time >= lastTime) {
@@ -122,8 +122,8 @@ class VKService: SocialNetworkService {
     }
 
     companion object {
-        private const val COUNT_POST_IN_MONTH = 200
-        private const val COUNT_POST_FIRST_DAY = 1000
+        private const val COUNT_POST_IN_MONTH = 50//200
+        private const val COUNT_POST_FIRST_DAY = 50//1000
         private const val LIMIT_POSTS_ON_REQUEST = 200
     }
 }

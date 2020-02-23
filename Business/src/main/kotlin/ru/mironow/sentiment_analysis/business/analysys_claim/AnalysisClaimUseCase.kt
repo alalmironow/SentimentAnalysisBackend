@@ -1,6 +1,8 @@
 package ru.mironow.sentiment_analysis.business.analysys_claim
 
 import ru.mironow.sentiment_analysis.AnalysisClaim
+import ru.mironow.sentiment_analysis.AnalysisProcess
+import ru.mironow.sentiment_analysis.AnalysisResult
 
 /**
  * Interface of component for analysis claim
@@ -17,4 +19,14 @@ interface AnalysisClaimUseCase {
      * Execute sentiment analysis by [claim]
      */
     fun executeAnalysis(claim: AnalysisClaim)
+
+    /**
+     * Get analysis process by analysis claim [id]
+     */
+    fun analysisProcess(id: String): AnalysisProcess
+
+    /**
+     *  Result of sentiment analysis
+     */
+    fun analysisResult(claimId: String): AnalysisResult
 }
