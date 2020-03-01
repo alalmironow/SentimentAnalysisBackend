@@ -69,15 +69,24 @@ class VKService: SocialNetworkService {
         }
 
         while (postCounter <= limitPost) {
-            val countInRequest = if ((limitPost - postCounter) > LIMIT_POSTS_ON_REQUEST) {
-                LIMIT_POSTS_ON_REQUEST
+            var limitRequest = 0
+            if (postCounter + LIMIT_POSTS_ON_REQUEST >= limitPost) {
+                limitRequest = postCounter + LIMIT_POSTS_ON_REQUEST
             } else {
-                limitPost - postCounter
+                limitRequest = limitPost - postCounter
             }
-            val posts = request.startFrom(index.toString())
-                    .count(countInRequest)
+            val postsText = mutableMapOf<String, Int>()
+            val postsFrom = request.startFrom(index.toString())
+                    .count(limitRequest)
                     .execute().items
-                    .stream().map { wallPostFull ->
+            val posts = postsFrom.stream()
+                    .filter {
+                        val textExist = postsText.containsKey(it.text)
+                        if (!textExist) {
+                            postsText.put(it.text, 1)
+                        }
+                        !textExist
+                    }.map { wallPostFull ->
                         if (wallPostFull.comments.count > 0) {
                             val comments = searchCommentsForPost(wallPostFull.id, wallPostFull.ownerId)
                             data.addAll(comments)
@@ -91,7 +100,7 @@ class VKService: SocialNetworkService {
             index += 1
             data.addAll(posts)
             postCounter += posts.size
-            if (posts.size < LIMIT_POSTS_ON_REQUEST) {
+            if (postsFrom.size < limitRequest) {
                 break
             }
         }

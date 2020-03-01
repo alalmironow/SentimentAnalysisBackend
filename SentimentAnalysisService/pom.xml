@@ -41,6 +41,13 @@
             <version>2.3.0</version>
         </dependency>
 
+        <!-- https://mvnrepository.com/artifact/com.squareup.retrofit2/converter-gson -->
+        <dependency>
+            <groupId>com.squareup.retrofit2</groupId>
+            <artifactId>converter-gson</artifactId>
+            <version>2.3.0</version>
+        </dependency>
+
         <dependency>
             <groupId>ru.mironow</groupId>
             <artifactId>DataAccessInterface</artifactId>

@@ -16,7 +16,9 @@ class SentimentAnalysisService(val restApi: RestApi) {
      * false - negative
      */
     fun analysisSentiment(text: String): Boolean {
-        //val sentiment = restApi.analysisSentiment(text)
-        return true
+        val analysisRequest = AnalysisRequest(message = text)
+        val body =  restApi.analysisSentiment(analysisRequest)
+                .execute()
+        return body.body().equals("1")
     }
 }

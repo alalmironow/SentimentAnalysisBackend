@@ -48,6 +48,6 @@ class ApiController(val analysisClaimUseCase: AnalysisClaimUseCase) {
 
     @GetMapping("/test")
     fun test() {
-        analysisClaimUseCase.createAnalysisClaim("коронавирус")
+        analysisClaimUseCase.createAnalysisClaim("Футбол сборная россии")
     }
 }
