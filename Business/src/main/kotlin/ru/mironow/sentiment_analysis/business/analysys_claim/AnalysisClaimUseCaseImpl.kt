@@ -115,7 +115,7 @@ open class AnalysisClaimUseCaseImpl(
         }
 
         observer.invoke()
-l
+
         return StatisticDay(
                 date = date,
                 countPositive = countPositive,
