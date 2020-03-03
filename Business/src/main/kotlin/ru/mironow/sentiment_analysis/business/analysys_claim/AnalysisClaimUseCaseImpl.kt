@@ -1,5 +1,8 @@
 package ru.mironow.sentiment_analysis.business.analysys_claim
 
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import org.springframework.scheduling.annotation.Async
 import org.springframework.stereotype.Component
 import ru.mironow.sentiment_analysis.*
@@ -39,12 +42,12 @@ open class AnalysisClaimUseCaseImpl(
         )
         analysisClaimService.save(claim)
 
-        executeAnalysis(claim)
-
+        GlobalScope.launch {
+            executeAnalysis(claim)
+        }
         return claim
     }
 
-    @Async
     override fun executeAnalysis(claim: AnalysisClaim) {
         var processClaim = claim.copy(stage = AnalysisClaimStage.LOAD_DATA)
         analysisClaimService.update(processClaim)

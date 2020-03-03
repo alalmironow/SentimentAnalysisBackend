@@ -1,5 +1,6 @@
 package ru.mironow.sentiment_analysis.business.analysys_claim
 
+import org.springframework.scheduling.annotation.Async
 import ru.mironow.sentiment_analysis.AnalysisClaim
 import ru.mironow.sentiment_analysis.AnalysisProcess
 import ru.mironow.sentiment_analysis.AnalysisResult

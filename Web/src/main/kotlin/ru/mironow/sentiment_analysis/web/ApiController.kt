@@ -12,6 +12,7 @@ import ru.mironow.sentiment_analysis.web.response.Response
  *
  * Created By Alex Mironow - 13.02.2020
  */
+@CrossOrigin
 @RestController
 class ApiController(val analysisClaimUseCase: AnalysisClaimUseCase) {
     /**
