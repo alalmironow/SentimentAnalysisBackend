@@ -68,10 +68,10 @@ class VKService: SocialNetworkService {
             request = request.endTime( (Timestamp.valueOf(endTime).time/1000).toInt() )
         }
 
-        while (postCounter <= limitPost) {
+        while (postCounter < limitPost) {
             var limitRequest = 0
-            if (postCounter + LIMIT_POSTS_ON_REQUEST >= limitPost) {
-                limitRequest = postCounter + LIMIT_POSTS_ON_REQUEST
+            if (postCounter + LIMIT_POSTS_ON_REQUEST < limitPost) {
+                limitRequest = LIMIT_POSTS_ON_REQUEST
             } else {
                 limitRequest = limitPost - postCounter
             }
@@ -79,14 +79,16 @@ class VKService: SocialNetworkService {
             val postsFrom = request.startFrom(index.toString())
                     .count(limitRequest)
                     .execute().items
-            val posts = postsFrom.stream()
+            var posts = postsFrom.stream()
                     .filter {
                         val textExist = postsText.containsKey(it.text)
                         if (!textExist) {
                             postsText.put(it.text, 1)
                         }
                         !textExist
-                    }.map { wallPostFull ->
+                    }.collect(Collectors.toList())
+            posts = posts.subList(0, if (posts.size < limitPost) posts.size else limitPost)
+            val postsSocialData = posts.stream().map { wallPostFull ->
                         if (wallPostFull.comments.count > 0) {
                             val comments = searchCommentsForPost(wallPostFull.id, wallPostFull.ownerId)
                             data.addAll(comments)
@@ -98,8 +100,8 @@ class VKService: SocialNetworkService {
                         )
                     }.collect(Collectors.toList())
             index += 1
-            data.addAll(posts)
-            postCounter += posts.size
+            data.addAll(postsSocialData)
+            postCounter += postsSocialData.size
             if (postsFrom.size < limitRequest) {
                 break
             }
@@ -131,8 +133,8 @@ class VKService: SocialNetworkService {
     }
 
     companion object {
-        private const val COUNT_POST_IN_MONTH = 50//200
-        private const val COUNT_POST_FIRST_DAY = 50//1000
+        private const val COUNT_POST_IN_MONTH = 200
+        private const val COUNT_POST_FIRST_DAY = 1000
         private const val LIMIT_POSTS_ON_REQUEST = 200
     }
 }

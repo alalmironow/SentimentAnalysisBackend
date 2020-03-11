@@ -2,8 +2,6 @@ package ru.mironow.sentiment_analysis.business.analysys_claim
 
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
-import org.springframework.scheduling.annotation.Async
 import org.springframework.stereotype.Component
 import ru.mironow.sentiment_analysis.*
 import ru.mironow.sentiment_analysis.data_service.AnalysisClaimService
@@ -124,7 +122,7 @@ open class AnalysisClaimUseCaseImpl(
                 countPositive = countPositive,
                 countNegative = countNegative,
                 count = count,
-                statisticMessage = "${count} записи. Из них ${countPosts} постов и ${countComments} комментариев"
+                statisticMessage = "${count} записей. Из них ${countPosts} постов и ${countComments} комментариев"
         )
     }
 
